@@ -1,19 +1,15 @@
 <script lang="ts">
   import { Player } from './models'
 
-  export let turn: Player;
-  export let value: Player;
-  export let index: number;
-  export let onSelect: (idx: number, value: Player) => void;
+  export let turn: Player
+  export let value: Player
+  export let index: number
+  export let onSelect: (idx: number, value: Player) => void
 
   const handleClick = () => {
-    onSelect(index, turn);
+    onSelect(index, turn)
   }
 </script>
-
-<button class={value} on:click={handleClick} disabled={value !== Player.None}>
-  {value === Player.None ? '' : value}
-</button>
 
 <style>
   button {
@@ -32,3 +28,7 @@
     color: black;
   }
 </style>
+
+<button class={value} on:click={handleClick} disabled={value !== Player.None}>
+  {value === Player.None ? '' : value}
+</button>

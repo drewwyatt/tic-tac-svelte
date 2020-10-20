@@ -2,7 +2,17 @@
   import { Player } from './models'
   import Space from './Space.svelte'
 
-  let moves = [Player.None, Player.None, Player.None, Player.None, Player.None, Player.None, Player.None, Player.None, Player.None];
+  let moves = [
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+    Player.None,
+  ]
   let turn = Player.X
 
   const handleMove = (space: number, move: Player) => {
@@ -11,12 +21,6 @@
   }
 </script>
 
-<div>
-  {#each moves as value, index }
-    <Space {index} {value} {turn} onSelect={handleMove} />
-  {/each}
-</div>
-
 <style>
   div {
     display: grid;
@@ -24,3 +28,9 @@
     grid-template-rows: 100px 100px 100px;
   }
 </style>
+
+<div>
+  {#each moves as value, index}
+    <Space {index} {value} {turn} onSelect={handleMove} />
+  {/each}
+</div>
