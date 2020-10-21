@@ -2,6 +2,7 @@ import { interpret } from 'xstate'
 import machine from './state'
 
 const IDLE = 'idle'
+const AWAITING_MOVE = 'awaitingMove'
 
 describe('state machine', () => {
   const game = interpret(machine)
@@ -11,6 +12,11 @@ describe('state machine', () => {
   })
 
   it('starts in an idle state', () => {
-    expect(game.state.value).toEqual(IDLE)
+    expect(game).toEqualState(IDLE)
+  })
+
+  it('awaits move on start', () => {
+    game.send('START')
+    expect(game).toEqualState(AWAITING_MOVE)
   })
 })
