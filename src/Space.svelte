@@ -16,16 +16,16 @@
     width: 100%;
     height: 100%;
     text-align: center;
+    background: var(--disabled);
+    color: var(--background);
   }
 
   .x {
-    background: black;
-    color: white;
+    background: var(--pink);
   }
 
   .o {
-    background: white;
-    color: black;
+    background: var(--cyan);
   }
 </style>
 
