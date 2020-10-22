@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Player } from './models'
+  import type { Player } from './models'
 
   export let turn: Player
   export let value: Player
@@ -29,6 +29,6 @@
   }
 </style>
 
-<button class={value} on:click={handleClick} disabled={value !== Player.None}>
-  {value === Player.None ? '' : value}
+<button class={value ?? ''} on:click={handleClick} disabled={value !== null}>
+  {value === null ? '' : value}
 </button>

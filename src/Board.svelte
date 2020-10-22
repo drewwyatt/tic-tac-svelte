@@ -1,24 +1,12 @@
 <script lang="ts">
-  import { Player } from './models'
   import Space from './Space.svelte'
+  import machine from './state/machine'
+  import useMachine from './state/useMachine'
 
-  let moves = [
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-    Player.None,
-  ]
-  let turn = Player.X
+  const { state, send } = useMachine(machine)
 
-  const handleMove = (space: number, move: Player) => {
-    moves = [...moves.slice(0, space), move, ...moves.slice(space + 1)]
-    turn = move === Player.X ? Player.O : Player.X
-  }
+  $: moves = $state.context.moves
+  $: turn = $state.context.turn
 </script>
 
 <style>
@@ -26,11 +14,16 @@
     display: grid;
     grid-template-columns: 100px 100px 100px;
     grid-template-rows: 100px 100px 100px;
+    color: var(--foreground);
   }
 </style>
 
 <div>
   {#each moves as value, index}
-    <Space {index} {value} {turn} onSelect={handleMove} />
+    <Space
+      {index}
+      {value}
+      {turn}
+      onSelect={position => send('MOVE', { position })} />
   {/each}
 </div>

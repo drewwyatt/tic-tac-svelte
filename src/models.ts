@@ -1,5 +1,1 @@
-export enum Player {
-  X = 'x',
-  O = 'o',
-  None = 'none',
-}
+export type Player = 'x' | 'o' | null
