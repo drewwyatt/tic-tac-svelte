@@ -1,7 +1,7 @@
 <script lang="ts">
   import { inspect } from '@xstate/inspect'
   import Space from './Space.svelte'
-  import machine from './state/machine'
+  import machine, { move, start } from './state/machine'
   import useMachine from './state/useMachine'
   import { isDev } from './env'
 
@@ -12,6 +12,7 @@
 
   const { state, send } = useMachine(machine, { devTools })
 
+  $: started = !$state.matches('idle')
   $: moves = $state.context.moves
   $: turn = $state.context.turn
 </script>
@@ -27,10 +28,7 @@
 
 <div>
   {#each moves as value, index}
-    <Space
-      {index}
-      {value}
-      {turn}
-      onSelect={position => send('MOVE', { position })} />
+    <Space {index} {value} {turn} onSelect={position => send(move(position))} />
   {/each}
+  {#if !started}<button on:click={() => send(start())}>Start</button>{/if}
 </div>

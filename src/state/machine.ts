@@ -8,8 +8,13 @@ type Context = {
   turn: Player | null
 }
 
-type TEvent<T extends string, U extends {} = {}> = { type: T } & U
+type TEvent<T extends string, U extends {} = {}> = {
+  type: T
+} & U
 type Event = TEvent<'START'> | TEvent<'MOVE', { position: number }>
+
+export const start = () => 'START' as const
+export const move = (position: number) => ({ type: 'MOVE', position } as const)
 
 const machine = createMachine<Context, Event>(
   {
@@ -22,21 +27,17 @@ const machine = createMachine<Context, Event>(
     states: {
       idle: { on: { START: 'awaitingMove' } },
       awaitingMove: {
+        entry: assign({ turn: ({ turn }) => turn ?? 'x' }),
         on: {
           MOVE: [
             {
               target: 'awaitingMove',
               actions: assign({
-                moves: (ctx, { position }) => {
-                  console.log('move!')
-                  return [
-                    ctx.turn,
-                    ...ctx.moves.slice(1),
-                    // ...ctx.moves.slice(0, position),
-                    // ctx.turn,
-                    // ...ctx.moves.slice(position + 1),
-                  ]
-                },
+                moves: (ctx, { position }) => [
+                  ...ctx.moves.slice(0, position),
+                  ctx.turn,
+                  ...ctx.moves.slice(position + 1),
+                ],
                 turn: ctx => (ctx.turn === 'x' ? 'o' : 'x'),
               }),
 
