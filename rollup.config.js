@@ -85,7 +85,7 @@ export default {
     injectProcessEnv({
       NODE_ENV: production
         ? JSON.stringify('production')
-        : JSON.stringify('devekopment'),
+        : JSON.stringify('development'),
     }),
   ],
   watch: {
