@@ -40,12 +40,6 @@ const machine = createMachine<Context, Event>(
                 ],
                 turn: ctx => (ctx.turn === 'x' ? 'o' : 'x'),
               }),
-
-              // (ctx, { position }) => {
-              //   console.log('ACTION!')
-              //   ctx.moves[position] = ctx.turn
-              //   ctx.turn = ctx.turn === 'x' ? 'o' : 'x'
-              // },
               cond: 'isValidMove',
             },
             { target: 'invalidMove' },
@@ -57,10 +51,8 @@ const machine = createMachine<Context, Event>(
   },
   {
     guards: {
-      isValidMove: (ctx, e) => {
-        console.log('inValidMove', ctx, e)
-        return e.type === 'MOVE' && ctx.moves[e.position] === null
-      },
+      isValidMove: (ctx, e) =>
+        e.type === 'MOVE' && ctx.moves[e.position] === null,
     },
   },
 )
