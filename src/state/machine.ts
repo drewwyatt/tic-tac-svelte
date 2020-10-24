@@ -1,33 +1,32 @@
-import { createMachine, assign } from 'xstate'
+import { actions, createMachine, assign } from 'xstate'
+import * as guards from './guards'
+import { Context, GameEvent, togglePlayer, events } from './models'
 
-type Player = 'x' | 'o'
-type Move = Player | null
+const { choose, pure, send } = actions
 
-type Context = {
-  moves: Move[]
-  turn: Player | null
-}
-
-type TEvent<T extends string, U extends {} = {}> = {
-  type: T
-} & U
-type Event = TEvent<'START'> | TEvent<'MOVE', { position: number }>
-
-export const start = () => 'START' as const
-export const move = (position: number) => ({ type: 'MOVE', position } as const)
-
-const machine = createMachine<Context, Event>(
+const machine = createMachine<Context, GameEvent>(
   {
     id: 'game',
     initial: 'idle',
     context: {
       moves: [null, null, null, null, null, null, null, null, null],
       turn: null,
+      winner: null,
     },
     states: {
       idle: { on: { START: 'awaitingMove' } },
       awaitingMove: {
-        entry: assign({ turn: ({ turn }) => turn ?? 'x' }),
+        entry: choose([
+          {
+            cond: 'hasWinner',
+            actions: pure(({ turn }) =>
+              send(events.reportWin(togglePlayer(turn!))),
+            ),
+          },
+          {
+            actions: assign({ turn: ({ turn }) => turn ?? 'x' }),
+          },
+        ]),
         on: {
           MOVE: [
             {
@@ -44,16 +43,24 @@ const machine = createMachine<Context, Event>(
             },
             { target: 'invalidMove' },
           ],
+          'END.WIN': 'end.win',
         },
       },
       invalidMove: {},
+      end: {
+        entry: assign({ turn: () => null }) as any,
+        states: {
+          win: {
+            entry: assign({
+              winner: (_, { player }: events.WinEvent) => player,
+            }) as any,
+          },
+        },
+      },
     },
   },
   {
-    guards: {
-      isValidMove: (ctx, e) =>
-        e.type === 'MOVE' && ctx.moves[e.position] === null,
-    },
+    guards,
   },
 )
 
