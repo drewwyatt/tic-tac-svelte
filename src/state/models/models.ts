@@ -10,3 +10,9 @@ export type Context = {
   turn: Player | null
   winner: Player | null
 }
+
+export const DEFAULT_CONTEXT: Context = {
+  moves: [null, null, null, null, null, null, null, null, null],
+  turn: null,
+  winner: null,
+}

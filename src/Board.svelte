@@ -1,7 +1,7 @@
 <script lang="ts">
   import { inspect } from '@xstate/inspect'
   import Space from './Space.svelte'
-  import machine, { move, start } from './state/machine'
+  import machine, { events } from './state/machine'
   import useMachine from './state/useMachine'
   import { isDev } from './env'
 
@@ -28,7 +28,13 @@
 
 <div>
   {#each moves as value, index}
-    <Space {index} {value} {turn} onSelect={position => send(move(position))} />
+    <Space
+      {index}
+      {value}
+      {turn}
+      onSelect={position => send(events.move(position))} />
   {/each}
-  {#if !started}<button on:click={() => send(start())}>Start</button>{/if}
+  {#if !started}
+    <button on:click={() => send(events.start())}>Start</button>
+  {:else}<button on:click={() => send(events.restart())}>Restart</button>{/if}
 </div>

@@ -1,6 +1,12 @@
 import { actions, createMachine, assign } from 'xstate'
 import * as guards from './guards'
-import { Context, GameEvent, togglePlayer, events } from './models'
+import {
+  Context,
+  GameEvent,
+  DEFAULT_CONTEXT,
+  togglePlayer,
+  events,
+} from './models'
 
 const { choose, pure, send } = actions
 
@@ -8,11 +14,7 @@ const machine = createMachine<Context, GameEvent>(
   {
     id: 'game',
     initial: 'idle',
-    context: {
-      moves: [null, null, null, null, null, null, null, null, null],
-      turn: null,
-      winner: null,
-    },
+    context: DEFAULT_CONTEXT,
     states: {
       idle: { on: { START: 'awaitingMove' } },
       awaitingMove: {
@@ -49,18 +51,38 @@ const machine = createMachine<Context, GameEvent>(
           ],
           'END.WIN': 'end.win',
           'END.DRAW': 'end.draw',
+          RESTART: {
+            target: 'awaitingMove',
+            actions: assign(DEFAULT_CONTEXT),
+          },
         },
       },
-      invalidMove: {},
+      invalidMove: {
+        on: {
+          RESTART: {
+            target: 'awaitingMove',
+            actions: assign(DEFAULT_CONTEXT),
+          },
+        },
+      },
       end: {
         entry: assign({ turn: () => null }) as any,
+        on: {
+          RESTART: {
+            target: 'awaitingMove',
+            actions: assign(DEFAULT_CONTEXT),
+          },
+        },
         states: {
           win: {
+            type: 'final',
             entry: assign({
               winner: (_, { player }: events.WinEvent) => player,
             }) as any,
           },
-          draw: {},
+          draw: {
+            type: 'final',
+          },
         },
       },
     },
@@ -70,4 +92,5 @@ const machine = createMachine<Context, GameEvent>(
   },
 )
 
+export { events }
 export default machine
