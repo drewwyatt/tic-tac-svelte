@@ -6,6 +6,16 @@ const AWAITING_MOVE = 'awaitingMove'
 const INVALID_MOVE = 'invalidMove'
 const WIN = 'end.win'
 
+//      +   +
+//      |   |
+//    0 | 1 | 2
+// +-------------+
+//    3 | 4 | 5
+// +-------------+
+//    6 | 7 | 8
+//      |   |
+//      +   +
+
 describe('state machine', () => {
   const game = interpret(machine)
 
@@ -44,6 +54,10 @@ describe('state machine', () => {
     })
 
     describe('end states', () => {
+      it('un-sets turn on win', () => {
+        sendMoves(0, 3, 1, 4, 2)
+        expect(game.state.context.turn).toEqual(null)
+      })
       describe('wins', () => {
         describe('horizontal', () => {
           it('recognizes a top-row win', () => {
@@ -58,10 +72,29 @@ describe('state machine', () => {
             expect(game.state.context.winner).toEqual('o')
           })
 
-          it('recognizes a bottom-row win', () => {
+          it('recognizes a right-col win', () => {
             sendMoves(6, 3, 7, 4, 8)
             expect(game.state.matches(WIN)).toEqual(true)
             expect(game.state.context.winner).toEqual('x')
+          })
+        })
+        describe('vertical', () => {
+          it('recognizes a left-col win', () => {
+            sendMoves(1, 0, 2, 3, 4, 6)
+            expect(game.state.matches(WIN)).toEqual(true)
+            expect(game.state.context.winner).toEqual('o')
+          })
+
+          it('recognizes a mid-col win', () => {
+            sendMoves(1, 3, 4, 2, 7)
+            expect(game.state.matches(WIN)).toEqual(true)
+            expect(game.state.context.winner).toEqual('x')
+          })
+
+          it('recognizes a right-col win', () => {
+            sendMoves(6, 2, 1, 5, 4, 8)
+            expect(game.state.matches(WIN)).toEqual(true)
+            expect(game.state.context.winner).toEqual('o')
           })
         })
       })
