@@ -24,6 +24,10 @@ const machine = createMachine<Context, GameEvent>(
             ),
           },
           {
+            cond: 'isDraw',
+            actions: send(events.reportDraw()),
+          },
+          {
             actions: assign({ turn: ({ turn }) => turn ?? 'x' }),
           },
         ]),
@@ -44,6 +48,7 @@ const machine = createMachine<Context, GameEvent>(
             { target: 'invalidMove' },
           ],
           'END.WIN': 'end.win',
+          'END.DRAW': 'end.draw',
         },
       },
       invalidMove: {},
@@ -55,6 +60,7 @@ const machine = createMachine<Context, GameEvent>(
               winner: (_, { player }: events.WinEvent) => player,
             }) as any,
           },
+          draw: {},
         },
       },
     },

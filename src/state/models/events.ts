@@ -4,6 +4,7 @@ export const start = () => ({ type: 'START' } as const)
 export const move = (position: number) => ({ type: 'MOVE', position } as const)
 export const reportWin = (player: Player) =>
   ({ type: 'END.WIN', player } as const)
+export const reportDraw = () => ({ type: 'END.DRAW' } as const)
 
 export type StartEvent = ReturnType<typeof start>
 export type MoveEvent = ReturnType<typeof move>

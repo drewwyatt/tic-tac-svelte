@@ -30,3 +30,5 @@ export const hasWinner: Guard = ({ moves }) =>
     ([p1, ...positions]) =>
       isPlayer(moves[p1]) && positions.every(p => moves[p] === moves[p1]),
   )
+
+export const isDraw: Guard = ({ moves }) => moves.every(m => m !== null)

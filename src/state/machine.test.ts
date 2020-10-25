@@ -5,6 +5,7 @@ const IDLE = 'idle'
 const AWAITING_MOVE = 'awaitingMove'
 const INVALID_MOVE = 'invalidMove'
 const WIN = 'end.win'
+const DRAW = 'end.draw'
 
 //      +   +
 //      |   |
@@ -58,6 +59,15 @@ describe('state machine', () => {
         sendMoves(0, 3, 1, 4, 2)
         expect(game.state.context.turn).toEqual(null)
       })
+
+      describe('draw', () => {
+        it('ends the game in a draw when no spaces are available', () => {
+          sendMoves(0, 1, 2, 3, 5, 4, 7, 8, 6)
+          expect(game.state.matches(DRAW)).toEqual(true)
+          expect(game.state.context.winner).toEqual(null)
+        })
+      })
+
       describe('wins', () => {
         describe('horizontal', () => {
           it('recognizes a top-row win', () => {
