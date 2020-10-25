@@ -97,6 +97,19 @@ describe('state machine', () => {
             expect(game.state.context.winner).toEqual('o')
           })
         })
+        describe('diagonal', () => {
+          it('recognizes ltr diagonal wins', () => {
+            sendMoves(0, 3, 4, 2, 8)
+            expect(game.state.matches(WIN)).toEqual(true)
+            expect(game.state.context.winner).toEqual('x')
+          })
+
+          it('recognizes rtl diagonal wins', () => {
+            sendMoves(3, 2, 1, 4, 5, 6)
+            expect(game.state.matches(WIN)).toEqual(true)
+            expect(game.state.context.winner).toEqual('o')
+          })
+        })
       })
     })
   })

@@ -20,6 +20,9 @@ const WIN_POSITIONS: [number, number, number][] = [
   [0, 3, 6],
   [1, 4, 7],
   [2, 5, 8],
+  // diagonal
+  [0, 4, 8],
+  [2, 4, 6],
 ]
 
 export const hasWinner: Guard = ({ moves }) =>
