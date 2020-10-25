@@ -50,7 +50,7 @@ describe('state machine', () => {
 
     it('blocks moves onto non-empty spaces', () => {
       sendMoves(0, 0)
-      expect(game).toEqualState('invalidMove')
+      expect(game).toEqualState(INVALID_MOVE)
     })
 
     describe('end states', () => {
