@@ -13,10 +13,9 @@ const { choose, pure, send } = actions
 const machine = createMachine<Context, GameEvent>(
   {
     id: 'game',
-    initial: 'idle',
+    initial: 'awaitingMove',
     context: DEFAULT_CONTEXT,
     states: {
-      idle: { on: { START: 'awaitingMove' } },
       awaitingMove: {
         entry: choose([
           {
