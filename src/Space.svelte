@@ -18,6 +18,12 @@
     text-align: center;
     background: var(--disabled);
     color: var(--background);
+    cursor: pointer;
+  }
+
+  .x,
+  .o {
+    cursor: auto;
   }
 
   .x {

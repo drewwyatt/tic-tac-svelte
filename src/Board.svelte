@@ -27,7 +27,6 @@
 </style>
 
 <div>
-  {#if done}DONE!{:else}not done{/if}
   {#each moves as value, index}
     <Space
       {index}
