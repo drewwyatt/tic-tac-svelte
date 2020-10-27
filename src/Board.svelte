@@ -10,9 +10,9 @@
     inspect({ iframe: false })
   }
 
-  const { state, send } = useMachine(machine, { devTools })
+  const [state, dispatch] = useMachine(machine, { devTools })
 
-  $: started = !$state.matches('idle')
+  $: done = $state.matches('end')
   $: moves = $state.context.moves
   $: turn = $state.context.turn
 </script>
@@ -27,14 +27,13 @@
 </style>
 
 <div>
+  {#if done}DONE!{:else}not done{/if}
   {#each moves as value, index}
     <Space
       {index}
       {value}
       {turn}
-      onSelect={position => send(events.move(position))} />
+      onSelect={position => dispatch(events.move(position))} />
   {/each}
-  {#if !started}
-    <button on:click={() => send(events.start())}>Start</button>
-  {:else}<button on:click={() => send(events.restart())}>Restart</button>{/if}
+  <button on:click={() => dispatch(events.restart())}>Restart</button>
 </div>

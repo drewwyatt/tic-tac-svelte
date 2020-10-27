@@ -8,18 +8,21 @@ import {
   interpret,
 } from 'xstate'
 
+type MachineApi<T extends StateMachine<any, any, any>> = T extends StateMachine<
+  infer C,
+  infer S,
+  infer E
+>
+  ? [
+      Readable<State<C, E, S>>,
+      (event: Event<E> | Event<E>[], eventData?: EventData) => State<C, E, S>,
+    ]
+  : never
+
 const useMachine = <T extends StateMachine<any, any, any>>(
   machine: T,
   options: Partial<InterpreterOptions> = {},
-): T extends StateMachine<infer C, infer S, infer E>
-  ? {
-      send: (
-        event: Event<E> | Event<E>[],
-        eventData?: EventData,
-      ) => State<C, E, S>
-      state: Readable<State<C, E, S>>
-    }
-  : never => {
+): MachineApi<T> => {
   const service = interpret(machine, options)
 
   const store = readable(service.initialState, set => {
@@ -34,10 +37,7 @@ const useMachine = <T extends StateMachine<any, any, any>>(
     }
   })
 
-  return {
-    state: store,
-    send: service.send,
-  } as any
+  return [store, service.send] as MachineApi<T>
 }
 
 export default useMachine
