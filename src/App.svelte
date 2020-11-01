@@ -19,6 +19,11 @@
   :global(html) {
     background: var(--background);
   }
+
+  main {
+    min-height: 100%;
+    display: flex;
+  }
 </style>
 
 <main>

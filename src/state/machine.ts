@@ -10,6 +10,8 @@ import {
 
 const { choose, pure, send } = actions
 
+export type GameMachine = typeof machine
+
 const machine = createMachine<Context, GameEvent>(
   {
     id: 'game',
